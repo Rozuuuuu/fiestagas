@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import { ShoppingCart, Search, Menu, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Header({ onSearch }: { onSearch: (term: string) => void }) {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -14,6 +15,9 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const { user, logout } = useAuth()
+
+  const mainNavItems = ['Home', 'Products', 'Categories', 'About', 'Contact']
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +54,49 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
     }
   }
 
-  const navItems = ['Home', 'Products', 'Categories', 'About', 'Contact']
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
+  const renderAuthItems = () => {
+    if (user) {
+      return (
+        <div className="flex items-center space-x-4">
+          <span className="font-medium">{user.name}</span>
+          <button
+            onClick={handleLogout}
+            className={`font-medium transition-colors duration-300 ${
+              isScrolled ? 'hover:text-blue-800' : 'hover:text-blue-200'
+            }`}
+          >
+            Logout
+          </button>
+        </div>
+      )
+    }
+
+    return (
+      <>
+        <Link 
+          href="/auth/login"
+          className={`font-medium transition-colors duration-300 ${
+            isScrolled ? 'hover:text-blue-800' : 'hover:text-blue-200'
+          }`}
+        >
+          Login
+        </Link>
+        <Link 
+          href="/auth/register"
+          className={`font-medium transition-colors duration-300 ${
+            isScrolled ? 'hover:text-blue-800' : 'hover:text-blue-200'
+          }`}
+        >
+          Register
+        </Link>
+      </>
+    )
+  }
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
@@ -72,8 +118,8 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
+          <nav className="hidden md:flex items-center space-x-6">
+            {mainNavItems.map((item) => (
               <Link 
                 key={item}
                 href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
@@ -84,7 +130,10 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
                 {item}
               </Link>
             ))}
-            <form onSubmit={handleSearchSubmit} className="relative">
+            <div className="flex items-center space-x-4 border-l pl-6">
+              {renderAuthItems()}
+            </div>
+            <form onSubmit={handleSearchSubmit} className="relative ml-4">
               <Input
                 type="text"
                 placeholder="Search products..."
@@ -134,7 +183,7 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" />
               </form>
               <nav className="flex flex-col space-y-4">
-                {navItems.map((item) => (
+                {mainNavItems.map((item) => (
                   <Link 
                     key={item}
                     href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
@@ -146,6 +195,24 @@ export default function Header({ onSearch }: { onSearch: (term: string) => void 
                     {item}
                   </Link>
                 ))}
+                <div className="border-t pt-4 mt-2">
+                  {user ? (
+                    <>
+                      <p className="py-2 font-medium">{user.name}</p>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left py-2 font-medium"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/auth/login">Login</Link>
+                      <Link href="/auth/register">Register</Link>
+                    </>
+                  )}
+                </div>
                 <button className={`p-2 rounded-full transition-colors duration-300 flex items-center justify-center ${
                   isScrolled ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-white text-blue-600 hover:bg-blue-100'
                 }`}>

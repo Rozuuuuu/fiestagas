@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Cylinders",
+    "slug": "cylinders"
+  },
+  {
+    "id": 2,
+    "name": "Accessories",
+    "slug": "accessories"
+  },
+  {
+    "id": 3,
+    "name": "Appliances",
+    "slug": "appliances"
+  },
+  {
+    "id": 4,
+    "name": "Safety Purpose",
+    "slug": "safety-purpose"
+  }
+]

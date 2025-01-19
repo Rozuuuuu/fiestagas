@@ -1,0 +1,46 @@
+service: next-app
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+
+plugins:
+  - serverless-next.js
+
+custom:
+  nextConfigDir: ./
+  customDomain:
+    domainName: www.example.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+
+functions:
+  api:
+    handler: src/lambda_handler
+    events:
+      - http:
+          path: /api/{proxy+}
+          method: ANY
+      - http:
+          path: /api
+          method: ANY
+  static:
+    handler: src/lambda_handler
+    events:
+      - http:
+          path: /_next/{proxy+}
+          method: ANY
+      - http:
+          path: /static/{proxy+}
+          method: ANY
+  pages:
+    handler: src/lambda_handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+      - http:
+          path: /
+          method: ANY

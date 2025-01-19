@@ -1,16 +1,13 @@
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
-import { Inter, Poppins } from 'next/font/google'
+import { AuthProvider } from '@/context/AuthContext'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-const poppins = Poppins({ 
-  weight: ['400', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-poppins'
-})
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Fiesta Gas Products',
-  description: 'Your trusted source for LPG products',
+export const metadata: Metadata = {
+  title: 'Fiesta Gas',
+  description: 'Your trusted partner for safe and reliable LPG solutions',
 }
 
 export default function RootLayout({
@@ -20,7 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>{children}</body>
+      <body className={inter.className}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   )
 }

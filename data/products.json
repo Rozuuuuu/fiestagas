@@ -1,0 +1,48 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Fiesta Gas Cylinder 11kg",
+      "price": 1080,
+      "category": "Cylinders",
+      "description": "Perfect for household and commercial use",
+      "stockQuantity": 10,
+      "image": "/uploads/1737301138229-zq3onydbda.png",
+      "createdAt": "2025-01-19T15:38:58.308Z",
+      "updatedAt": "2025-01-19T15:38:58.308Z"
+    },
+    {
+      "id": 2,
+      "name": "Fiesta Gas Cylinder 5kg",
+      "price": 499,
+      "category": "Cylinders",
+      "description": "Ideal for small families and apartments",
+      "stockQuantity": 10,
+      "image": "/uploads/1737301228457-l5yaopqqll.png",
+      "createdAt": "2025-01-19T15:40:28.507Z",
+      "updatedAt": "2025-01-19T15:40:28.507Z"
+    },
+    {
+      "id": 3,
+      "name": "Fiesta Gas Cylinder 2.7kg",
+      "price": 299,
+      "category": "Cylinders",
+      "description": "Compact and portable solution",
+      "stockQuantity": 10,
+      "image": "/uploads/1737301271534-3onwtt1dqrg.png",
+      "createdAt": "2025-01-19T15:41:11.577Z",
+      "updatedAt": "2025-01-19T15:43:33.635Z"
+    },
+    {
+      "id": 4,
+      "name": "Fiesta Gas Cylinder Butane",
+      "price": 30,
+      "category": "Cylinders",
+      "description": "It’s lightweight, portable, and ideal for everyday cooking or outdoor activities like camping.",
+      "stockQuantity": 20,
+      "image": "/uploads/1737301660615-gyyd4dj1di.png",
+      "createdAt": "2025-01-19T15:47:41.157Z",
+      "updatedAt": "2025-01-19T15:47:41.157Z"
+    }
+  ]
+}

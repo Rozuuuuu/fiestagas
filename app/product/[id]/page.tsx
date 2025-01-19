@@ -1,60 +1,64 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
-
-interface Product {
-  id: number
-  name: string
-  price: number
-  image: string
-  category: string
-  description: string
-  specifications?: Record<string, string>
-}
-
-// This would typically come from an API or database
-const getProductDetails = (id: string): Product | undefined => {
-  const products: Record<string, Product> = {
-    '1': {
-      id: 1,
-      name: 'Fiesta Gas 11kg Cylinder',
-      price: 1080,
-      image: '/images/11kg.png',
-      category: 'Cylinders',
-      description: 'Perfect for household and commercial use. This 11kg cylinder provides long-lasting fuel for all your cooking needs.',
-      specifications: {
-        'Weight': '11kg',
-        'Height': '60cm',
-        'Diameter': '30cm',
-        'Material': 'Steel',
-        'Valve Type': 'Standard POL',
-      }
-    },
-    // Add more products as needed
-  }
-  return products[id]
-}
+import { Product } from '@/types/product'
+import { ArrowLeft } from 'lucide-react'
 
 export default function ProductDetails() {
   const params = useParams()
-  const [product, setProduct] = useState<Product | undefined>()
+  const router = useRouter()
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`/api/admin/products/${params.id}`)
+        if (response.ok) {
+          const data = await response.json()
+          setProduct(data)
+        }
+      } catch (error) {
+        console.error('Error fetching product:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
     if (params.id) {
-      const productDetails = getProductDetails(params.id as string)
-      setProduct(productDetails)
+      fetchProduct()
     }
   }, [params.id])
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header onSearch={() => {}} />
+        <div className="flex-grow flex items-center justify-center">
+          <p>Loading product details...</p>
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
   if (!product) {
-    return <div>Loading...</div>
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header onSearch={() => {}} />
+        <div className="flex-grow flex items-center justify-center">
+          <p>Product not found</p>
+        </div>
+        <Footer />
+      </div>
+    )
   }
 
   return (
@@ -66,6 +70,21 @@ export default function ProductDetails() {
         transition={{ duration: 0.5 }}
         className="flex-grow container mx-auto px-4 py-8 mt-20"
       >
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-6"
+        >
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            className="flex items-center text-blue-600 hover:text-blue-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+        </motion.div>
+
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/2">
@@ -73,8 +92,8 @@ export default function ProductDetails() {
                 <Image
                   src={product.image}
                   alt={product.name}
-                  fill
-                  style={{ objectFit: 'contain' }}
+                  layout="fill"
+                  objectFit="contain"
                   priority
                 />
               </div>
@@ -86,22 +105,14 @@ export default function ProductDetails() {
                 ₱{product.price.toFixed(2)}
               </p>
               <p className="text-gray-600 mb-6">{product.description}</p>
-              
-              {product.specifications && (
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold mb-4">Specifications</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    {Object.entries(product.specifications).map(([key, value]) => (
-                      <div key={key}>
-                        <span className="font-bold">{key}:</span> {value}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              <Button className="w-full bg-blue-600 text-white hover:bg-blue-700">
-                Add to Cart
+              <p className="text-sm text-gray-500 mb-6">
+                Stock Available: {product.stockQuantity}
+              </p>
+              <Button 
+                className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                disabled={product.stockQuantity === 0}
+              >
+                {product.stockQuantity > 0 ? 'Add to Cart' : 'Out of Stock'}
               </Button>
             </div>
           </div>

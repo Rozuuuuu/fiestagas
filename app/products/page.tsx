@@ -26,6 +26,21 @@ export default function Products() {
     <div className="min-h-screen flex flex-col">
       <Header onSearch={setSearchTerm} />
       <main className="flex-grow container mx-auto px-4 py-8 mt-20">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-6"
+        >
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            className="flex items-center text-blue-600 hover:text-blue-800"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+        </motion.div>
+
         {category && (
           <motion.div
             initial={{ opacity: 0, x: -20 }}
