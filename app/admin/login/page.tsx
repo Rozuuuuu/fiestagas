@@ -64,7 +64,7 @@ export default function AdminLogin() {
               onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
               required
               disabled={loading}
-              placeholder="fiestagas123@gmail.com"
+              placeholder="fiestagas"
               className="w-full"
             />
           </div>
